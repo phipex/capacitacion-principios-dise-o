@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capacitación: Principios de Diseño de Software</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .gradient-text {
+            background: -webkit-linear-gradient(45deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .section-card {
+            background-color: hsla(222, 47%, 11%, 0.5);
+            border-radius: 0.75rem;
+            border: 1px solid hsl(222, 47%, 18%);
+            /* For scroll animation */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .section-card.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .rule-box {
+            background-color: hsl(222, 47%, 11%);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            border-left: 3px solid;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .accordion-trigger .arrow {
+            transition: transform 0.3s ease-in-out;
+        }
+        .accordion-trigger.open .arrow {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-300 antialiased">
+
+    <!-- Menú de Navegación Fijo -->
+    <nav class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-sm border-b border-slate-700/50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-center items-center h-16 space-x-6 md:space-x-10">
+                <a href="#legibilidad" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">Legibilidad</a>
+                <a href="#modularidad" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">Modularidad</a>
+                <a href="#extensibilidad" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">Extensibilidad</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Encabezado y Título -->
+    <header class="text-center pt-16 pb-12 md:pt-24 md:pb-20 px-4">
+        <h1 class="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-white">
+            Principios Fundamentales de 
+            <span class="gradient-text">Diseño de Software</span>
+        </h1>
+        <p class="mt-6 max-w-3xl mx-auto text-lg md:text-xl text-slate-400">
+            Una guía para construir software robusto, mantenible y escalable. Aprende a escribir código que no solo funciona, sino que perdura en el tiempo.
+        </p>
+    </header>
+
+    <main class="container mx-auto px-4 pb-24">
+
+        <!-- 1. Legibilidad -->
+        <section id="legibilidad" class="mb-20 pt-20 -mt-20">
+            <h2 class="text-3xl md:text-4xl font-bold text-white border-l-4 border-blue-500 pl-4 mb-10 flex items-center gap-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                1. Legibilidad
+            </h2>
+            <p class="text-lg text-slate-400 mb-12">El software debe ser comprensible. Un código legible es más fácil de depurar, mantener y mejorar.</p>
+            
+            <div class="space-y-4">
+                <!-- Principio: Unicidad -->
+                <div class="section-card">
+                    <div class="accordion-trigger flex justify-between items-center cursor-pointer p-6">
+                        <h3 class="text-2xl font-bold text-blue-400">Unicidad</h3>
+                        <svg class="arrow w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content px-6 pb-6">
+                        <p class="mb-6 text-slate-400">Cada concepto o pieza de información debe tener una única representación en el sistema, evitando la duplicidad de código.</p>
+                        <p class="mb-6 text-slate-400"><strong class="text-white">Relación Principal:</strong> Implementación directa de <strong>DRY (Don't Repeat Yourself)</strong>.</p>
+                        <div class="grid md:grid-cols-2 gap-8 mb-6">
+                            <div><h4 class="font-semibold text-white mb-3">Qué hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-green-400 mr-2">✓</span>Centralizar la lógica de negocio.</li><li><span class="text-green-400 mr-2">✓</span>Crear funciones de utilidad compartidas.</li><li><span class="text-green-400 mr-2">✓</span>Usar constantes o enumeraciones.</li></ul></div>
+                            <div><h4 class="font-semibold text-white mb-3">Qué no hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-red-400 mr-2">✗</span>Copiar y pegar bloques de código.</li><li><span class="text-red-400 mr-2">✗</span>Definir la misma lógica en múltiples capas.</li><li><span class="text-red-400 mr-2">✗</span>Repetir consultas idénticas.</li></ul></div>
+                        </div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Preguntas que debo hacerme:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li>Si necesito cambiar esta lógica, ¿en cuántos lugares debo hacerlo?</li><li>¿Esta pieza de código ya existe en algún otro lugar del proyecto?</li><li>¿Estoy escribiendo algo que sé que ya he escrito antes?</li></ul></div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Características del software:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li><strong>Mantenimiento rápido:</strong> Un cambio se hace en un solo lugar.</li><li><strong>Menos propenso a errores:</strong> Se elimina el riesgo de inconsistencias.</li><li><strong>Código más limpio:</strong> La base de código es más pequeña y fácil de navegar.</li></ul></div>
+                        <div class="rule-box border-blue-500 mb-6"><p class="font-semibold text-white">Regla Práctica:</p><p class="text-slate-400">"Una vez, dos veces, tres veces, refactoriza."</p></div>
+                        <button class="show-example-btn bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded transition-colors">Mostrar Ejemplo</button>
+                        <div class="example-content hidden mt-4 pt-6 border-t border-slate-700/50">
+                            <h4 class="font-semibold text-white mb-4">Ejemplo de Código (Conceptual)</h4>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-red-900/20 p-4 rounded-lg border border-red-500/30"><h5 class="font-semibold text-red-400 mb-2">Cómo no cumplirlo</h5><p class="text-slate-400 text-sm">Un sistema donde la validación de un email se realiza de tres formas distintas: una vez en el controlador de la API (usando una regex diferente), otra vez en el servicio (con una función de validación duplicada) y una tercera vez en el frontend (con una lógica JavaScript repetida).</p></div>
+                                <div class="bg-green-900/20 p-4 rounded-lg border border-green-500/30"><h5 class="font-semibold text-green-400 mb-2">Cómo cumplirlo</h5><p class="text-slate-400 text-sm">Una clase `EmailValidator` centralizada con un método `isValid(email)` que encapsula toda la lógica de validación del email. Esta clase es inyectada o utilizada por el controlador de la API, el servicio y el código del frontend.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Principio: Uniformidad -->
+                <div class="section-card">
+                    <div class="accordion-trigger flex justify-between items-center cursor-pointer p-6">
+                        <h3 class="text-2xl font-bold text-blue-400">Uniformidad</h3>
+                        <svg class="arrow w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content px-6 pb-6">
+                        <p class="mb-6 text-slate-400">Se debe aplicar un conjunto coherente y mínimo de criterios en todo el software, como en la nomenclatura de variables y funciones.</p>
+                        <p class="mb-6 text-slate-400"><strong class="text-white">Relación Principal:</strong> Pilar de <strong>KISS (Keep It Simple, Stupid)</strong>. Un código uniforme es más simple de mantener.</p>
+                        <div class="grid md:grid-cols-2 gap-8 mb-6">
+                            <div><h4 class="font-semibold text-white mb-3">Qué hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-green-400 mr-2">✓</span>Definir y automatizar guías de estilo.</li><li><span class="text-green-400 mr-2">✓</span>Usar los mismos patrones de diseño.</li><li><span class="text-green-400 mr-2">✓</span>Mantener una estructura de carpetas consistente.</li></ul></div>
+                            <div><h4 class="font-semibold text-white mb-3">Qué no hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-red-400 mr-2">✗</span>Permitir que cada desarrollador aplique su propio estilo.</li><li><span class="text-red-400 mr-2">✗</span>Mezclar patrones sin una razón clara.</li><li><span class="text-red-400 mr-2">✗</span>Usar diferentes formas de nombrar los mismos conceptos.</li></ul></div>
+                        </div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Preguntas que debo hacerme:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li>¿Un nuevo desarrollador podría entender la estructura rápidamente?</li><li>¿La forma en que estoy nombrando es consistente con el resto?</li><li>¿Estamos resolviendo este tipo de problema de la misma manera en otros lugares?</li></ul></div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Características del software:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li><strong>Menor carga cognitiva:</strong> El código es predecible y fácil de "escanear".</li><li><strong>Onboarding más rápido:</strong> Los nuevos miembros se vuelven productivos antes.</li><li><strong>Revisiones de código eficientes:</strong> El equipo se enfoca en la lógica y no en el estilo.</li></ul></div>
+                        <div class="rule-box border-blue-500 mb-6"><p class="font-semibold text-white">Regla Práctica:</p><p class="text-slate-400">"El estilo de código es como la señalización vial: debe ser consistente para que todos entiendan."</p></div>
+                        <button class="show-example-btn bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded transition-colors">Mostrar Ejemplo</button>
+                        <div class="example-content hidden mt-4 pt-6 border-t border-slate-700/50">
+                            <h4 class="font-semibold text-white mb-4">Ejemplo de Código (Conceptual)</h4>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-red-900/20 p-4 rounded-lg border border-red-500/30"><h5 class="font-semibold text-red-400 mb-2">Cómo no cumplirlo</h5><p class="text-slate-400 text-sm">Un archivo JavaScript donde algunas variables se nombran con `camelCase`, otras con `snake_case` y algunas constantes con minúsculas. Las llaves de apertura de bloques `if` o `for` están a veces en la misma línea y a veces en una nueva línea.</p></div>
+                                <div class="bg-green-900/20 p-4 rounded-lg border border-green-500/30"><h5 class="font-semibold text-green-400 mb-2">Cómo cumplirlo</h5><p class="text-slate-400 text-sm">Un proyecto configurado con un linter (ej. ESLint) que aplica automáticamente reglas de estilo (ej. `camelCase` para variables, `PascalCase` para clases, identación con 2 espacios). Todas las funciones y clases siguen la misma convención.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Principio: Minimización -->
+                <div class="section-card">
+                    <div class="accordion-trigger flex justify-between items-center cursor-pointer p-6">
+                        <h3 class="text-2xl font-bold text-blue-400">Minimización</h3>
+                        <svg class="arrow w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content px-6 pb-6">
+                        <p class="mb-6 text-slate-400">El software debe tener únicamente la funcionalidad necesaria, evitando agregar características que no se van a utilizar.</p>
+                        <p class="mb-6 text-slate-400"><strong class="text-white">Relación Principal:</strong> Idéntico a <strong>YAGNI (You Ain't Gonna Need It)</strong>.</p>
+                        <div class="grid md:grid-cols-2 gap-8 mb-6">
+                            <div><h4 class="font-semibold text-white mb-3">Qué hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-green-400 mr-2">✓</span>Implementar únicamente la funcionalidad descrita.</li><li><span class="text-green-400 mr-2">✓</span>Escribir la solución más simple y directa.</li><li><span class="text-green-400 mr-2">✓</span>Refactorizar solo cuando un nuevo requisito lo justifique.</li></ul></div>
+                            <div><h4 class="font-semibold text-white mb-3">Qué no hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-red-400 mr-2">✗</span>Añadir funcionalidad "por si acaso".</li><li><span class="text-red-400 mr-2">✗</span>Sobre-ingenieriar soluciones.</li><li><span class="text-red-400 mr-2">✗</span>Construir por especulación o por una necesidad irreal.</li></ul></div>
+                        </div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Preguntas que debo hacerme:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li>¿Hay un requisito explícito que pida esto ahora mismo?</li><li>¿Cuál es la forma más simple en la que esto podría funcionar?</li><li>¿Estoy construyendo esto por especulación o por una necesidad real?</li></ul></div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Características del software:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li><strong>Entrega rápida de valor:</strong> El equipo se enfoca en lo que importa ahora.</li><li><strong>Mayor flexibilidad:</strong> Es más fácil adaptar un código simple que uno complejo.</li><li><strong>Menos código que mantener:</strong> Se reduce la superficie para la aparición de bugs.</li></ul></div>
+                        <div class="rule-box border-blue-500 mb-6"><p class="font-semibold text-white">Regla Práctica:</p><p class="text-slate-400">"Implementa lo que sabes que necesitas hoy, no lo que crees que necesitarás mañana."</p></div>
+                        <button class="show-example-btn bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded transition-colors">Mostrar Ejemplo</button>
+                        <div class="example-content hidden mt-4 pt-6 border-t border-slate-700/50">
+                            <h4 class="font-semibold text-white mb-4">Ejemplo de Código (Conceptual)</h4>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-red-900/20 p-4 rounded-lg border border-red-500/30"><h5 class="font-semibold text-red-400 mb-2">Cómo no cumplirlo</h5><p class="text-slate-400 text-sm">Un módulo de gestión de usuarios que incluye funciones para exportar datos a formatos XML, CSV y JSON, aunque el único requisito actual es la exportación a CSV. Además, tiene una función `importarUsuariosDesdeExcel` que nunca se ha solicitado.</p></div>
+                                <div class="bg-green-900/20 p-4 rounded-lg border border-green-500/30"><h5 class="font-semibold text-green-400 mb-2">Cómo cumplirlo</h5><p class="text-slate-400 text-sm">El módulo de gestión de usuarios solo contiene la función `exportarUsuariosACsv`. Si en el futuro surge un requisito para exportar a JSON, se añadiría esa funcionalidad en ese momento, siguiendo la misma estructura y patrón.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Modularidad -->
+        <section id="modularidad" class="mb-20 pt-20 -mt-20">
+            <h2 class="text-3xl md:text-4xl font-bold text-white border-l-4 border-purple-500 pl-4 mb-10 flex items-center gap-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-400"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                2. Modularidad
+            </h2>
+            <p class="text-lg text-slate-400 mb-12">Construir el software a partir de piezas interconectadas pero independientes. La modularidad mejora la mantenibilidad, la reutilización y la capacidad de trabajar en paralelo.</p>
+            
+            <div class="space-y-4">
+                <!-- Principio: Abstracción -->
+                <div class="section-card">
+                    <div class="accordion-trigger flex justify-between items-center cursor-pointer p-6">
+                        <h3 class="text-2xl font-bold text-purple-400">Abstracción</h3>
+                        <svg class="arrow w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content px-6 pb-6">
+                        <p class="mb-6 text-slate-400">Exponer interfaces simples que ocultan la complejidad interna. El consumidor de un módulo no necesita saber *cómo* funciona, solo *qué* hace.</p>
+                        <p class="mb-6 text-slate-400"><strong class="text-white">Relación Principal:</strong> La ocultación (o encapsulación) es un pilar de la POO y es fundamental para el principio <strong>Information Expert</strong> de GRASP.</p>
+                        <div class="grid md:grid-cols-2 gap-8 mb-6">
+                            <div><h4 class="font-semibold text-white mb-3">Qué hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-green-400 mr-2">✓</span>Exponer solo lo necesario a través de interfaces públicas.</li><li><span class="text-green-400 mr-2">✓</span>Ocultar la complejidad interna y los datos (privado).</li><li><span class="text-green-400 mr-2">✓</span>Ofrecer métodos que representen "qué" hacen, no "cómo".</li></ul></div>
+                            <div><h4 class="font-semibold text-white mb-3">Qué no hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-red-400 mr-2">✗</span>Exponer todos los miembros de una clase como públicos.</li><li><span class="text-red-400 mr-2">✗</span>Crear clases solo con getters y setters (Anemic Domain Model).</li><li><span class="text-red-400 mr-2">✗</span>Permitir que el código cliente manipule el estado interno.</li></ul></div>
+                        </div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Preguntas que debo hacerme:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li>¿Realmente necesito que este método o propiedad sea público?</li><li>¿Estoy exponiendo detalles de implementación que el cliente no necesita saber?</li></ul></div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Características del software:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li><strong>Seguridad:</strong> Se protege el estado interno de los objetos.</li><li><strong>Mantenibilidad:</strong> Se puede cambiar la implementación interna sin afectar a quienes lo consumen.</li><li><strong>Simplicidad:</strong> Los consumidores interactúan con una interfaz simple.</li></ul></div>
+                        <div class="rule-box border-purple-500 mb-6"><p class="font-semibold text-white">Regla Práctica:</p><p class="text-slate-400">"Oculta el 'cómo', expón el 'qué'."</p></div>
+                        <button class="show-example-btn bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded transition-colors">Mostrar Ejemplo</button>
+                        <div class="example-content hidden mt-4 pt-6 border-t border-slate-700/50">
+                            <h4 class="font-semibold text-white mb-4">Ejemplo de Código (Conceptual)</h4>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-red-900/20 p-4 rounded-lg border border-red-500/30"><h5 class="font-semibold text-red-400 mb-2">Cómo no cumplirlo</h5><p class="text-slate-400 text-sm">Una clase `Coche` donde para cambiar la velocidad, el código cliente tiene que acceder directamente a `coche.motor.cilindros.setRpm(X)` y `coche.transmision.engranajeActual = Y`, exponiendo detalles de cómo funciona el motor y la transmisión.</p></div>
+                                <div class="bg-green-900/20 p-4 rounded-lg border border-green-500/30"><h5 class="font-semibold text-green-400 mb-2">Cómo cumplirlo</h5><p class="text-slate-400 text-sm">La clase `Coche` expone un método público simple `acelerar(incrementoVelocidad)`. La lógica interna de cómo se ajustan el motor y la transmisión para lograr esa velocidad está encapsulada dentro del método, sin que el cliente necesite conocer los detalles.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Principio: Ocultación -->
+                <div class="section-card">
+                    <div class="accordion-trigger flex justify-between items-center cursor-pointer p-6">
+                        <h3 class="text-2xl font-bold text-purple-400">Ocultación</h3>
+                        <svg class="arrow w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content px-6 pb-6">
+                        <p class="mb-6 text-slate-400">Los módulos deben ocultar los detalles de implementación que no son esenciales para su interacción con otros módulos.</p>
+                        <p class="mb-6 text-slate-400"><strong class="text-white">Relación Principal:</strong> Pilar de POO y fundamental para <strong>Information Expert</strong> de GRASP.</p>
+                        <div class="grid md:grid-cols-2 gap-8 mb-6">
+                            <div><h4 class="font-semibold text-white mb-3">Qué hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-green-400 mr-2">✓</span>Exponer solo lo necesario vía interfaces públicas.</li><li><span class="text-green-400 mr-2">✓</span>Ocultar la complejidad interna (privado).</li><li><span class="text-green-400 mr-2">✓</span>Ofrecer métodos que representen "qué" hacen, no "cómo".</li></ul></div>
+                            <div><h4 class="font-semibold text-white mb-3">Qué no hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-red-400 mr-2">✗</span>Exponer todos los miembros como públicos.</li><li><span class="text-red-400 mr-2">✗</span>Crear clases solo con getters y setters (Anemic Domain Model).</li><li><span class="text-red-400 mr-2">✗</span>Permitir que el cliente manipule el estado interno.</li></ul></div>
+                        </div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Características del software:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li><strong>Seguridad:</strong> Se protege el estado interno de los objetos.</li><li><strong>Mantenibilidad:</strong> Se puede cambiar la implementación interna sin afectar a los consumidores.</li><li><strong>Simplicidad:</strong> Los consumidores interactúan con una interfaz simple.</li></ul></div>
+                        <div class="rule-box border-purple-500 mb-6"><p class="font-semibold text-white">Regla Práctica:</p><p class="text-slate-400">"Por defecto, todo es privado. Hazlo público solo si es estrictamente necesario."</p></div>
+                        <button class="show-example-btn bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded transition-colors">Mostrar Ejemplo</button>
+                        <div class="example-content hidden mt-4 pt-6 border-t border-slate-700/50">
+                            <h4 class="font-semibold text-white mb-4">Ejemplo de Código (Conceptual)</h4>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-red-900/20 p-4 rounded-lg border border-red-500/30"><h5 class="font-semibold text-red-400 mb-2">Cómo no cumplirlo</h5><p class="text-slate-400 text-sm">Una clase `CarritoCompras` donde todos los atributos y métodos auxiliares son públicos, permitiendo que cualquier parte del código externo pueda manipular directamente el estado interno del carrito.</p></div>
+                                <div class="bg-green-900/20 p-4 rounded-lg border border-green-500/30"><h5 class="font-semibold text-green-400 mb-2">Cómo cumplirlo</h5><p class="text-slate-400 text-sm">La clase `CarritoCompras` declara sus atributos y métodos auxiliares como privados. Solo expone métodos públicos esenciales como `addItem(producto)`, `removeItem(producto)`, y `getTotal()`.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Principio: Autoprotección -->
+                <div class="section-card">
+                    <div class="accordion-trigger flex justify-between items-center cursor-pointer p-6">
+                        <h3 class="text-2xl font-bold text-purple-400">Autoprotección</h3>
+                        <svg class="arrow w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content px-6 pb-6">
+                        <p class="mb-6 text-slate-400">Los módulos deben incluir validaciones y condiciones para protegerse contra un uso inadecuado.</p>
+                        <p class="mb-6 text-slate-400"><strong class="text-white">Relación Principal:</strong> Se relaciona con <strong>Diseño por Contrato</strong> y asegura la robustez (KISS).</p>
+                        <div class="grid md:grid-cols-2 gap-8 mb-6">
+                            <div><h4 class="font-semibold text-white mb-3">Qué hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-green-400 mr-2">✓</span>Validar argumentos de métodos públicos (guard clauses).</li><li><span class="text-green-400 mr-2">✓</span>Asegurar que los objetos se creen en estado válido.</li><li><span class="text-green-400 mr-2">✓</span>Lanzar excepciones claras ante uso incorrecto.</li></ul></div>
+                            <div><h4 class="font-semibold text-white mb-3">Qué no hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-red-400 mr-2">✗</span>Confiar ciegamente en los datos de entrada.</li><li><span class="text-red-400 mr-2">✗</span>Permitir la creación de objetos en estados inválidos.</li><li><span class="text-red-400 mr-2">✗</span>Capturar excepciones de manera silenciosa.</li></ul></div>
+                        </div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Preguntas que debo hacerme:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li>¿Qué pasaría si a este método le llega un valor nulo o inesperado?</li><li>¿Está este objeto protegiendo su propio estado y reglas (invariantes)?</li></ul></div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Características del software:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li><strong>Robustez:</strong> Más resistente a fallos por datos inesperados.</li><li><strong>Depuración fácil:</strong> Los errores se detectan cerca de la fuente del problema.</li><li><strong>Seguridad:</strong> Se evitan estados inconsistentes que pueden llevar a vulnerabilidades.</li></ul></div>
+                        <div class="rule-box border-purple-500 mb-6"><p class="font-semibold text-white">Regla Práctica:</p><p class="text-slate-400">"No confíes en el código que te llama; valida tus entradas."</p></div>
+                        <button class="show-example-btn bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded transition-colors">Mostrar Ejemplo</button>
+                        <div class="example-content hidden mt-4 pt-6 border-t border-slate-700/50">
+                            <h4 class="font-semibold text-white mb-4">Ejemplo de Código (Conceptual)</h4>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-red-900/20 p-4 rounded-lg border border-red-500/30"><h5 class="font-semibold text-red-400 mb-2">Cómo no cumplirlo</h5><p class="text-slate-400 text-sm">Una función `dividir(a, b)` que no verifica si `b` es cero, lo que lleva a un error de división por cero en tiempo de ejecución si se le pasa `0` como segundo argumento.</p></div>
+                                <div class="bg-green-900/20 p-4 rounded-lg border border-green-500/30"><h5 class="font-semibold text-green-400 mb-2">Cómo cumplirlo</h5><p class="text-slate-400 text-sm">La función `dividir(a, b)` incluye una `guard clause` al inicio: `if (b === 0) { throw new Error("No se puede dividir por cero."); }`. Esto asegura que el método solo opere con entradas válidas.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Principio: Cohesión -->
+                <div class="section-card">
+                    <div class="accordion-trigger flex justify-between items-center cursor-pointer p-6">
+                        <h3 class="text-2xl font-bold text-purple-400">Cohesión</h3>
+                        <svg class="arrow w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content px-6 pb-6">
+                        <p class="mb-6 text-slate-400">Las partes que componen un módulo deben estar estrechamente relacionadas y enfocadas en una única responsabilidad.</p>
+                        <p class="mb-6 text-slate-400"><strong class="text-white">Relación Principal:</strong> Corresponde a <strong>Alta Cohesión (GRASP)</strong> y <strong>Responsabilidad Única (SRP)</strong> de SOLID.</p>
+                        <div class="grid md:grid-cols-2 gap-8 mb-6">
+                            <div><h4 class="font-semibold text-white mb-3">Qué hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-green-400 mr-2">✓</span>Agrupar datos y funciones que operan sobre ellos.</li><li><span class="text-green-400 mr-2">✓</span>Asegurar que un módulo tenga una única responsabilidad.</li></ul></div>
+                            <div><h4 class="font-semibold text-white mb-3">Qué no hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-red-400 mr-2">✗</span>Crear clases genéricas como `Utils` o `Helpers`.</li><li><span class="text-red-400 mr-2">✗</span>Mezclar lógica de negocio, acceso a datos y UI en una clase.</li></ul></div>
+                        </div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Preguntas que debo hacerme:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li>¿Puedo describir lo que hace esta clase en una oración sin usar la palabra "y"?</li><li>Si cambio la UI, ¿debería modificar esta clase de lógica de negocio? (Si es sí, la cohesión es baja).</li></ul></div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Características del software:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li><strong>Fácil de entender:</strong> Los módulos tienen un propósito claro.</li><li><strong>Reutilizable:</strong> Los módulos enfocados son más fáciles de usar en otros contextos.</li><li><strong>Robusto:</strong> El impacto de un cambio está localizado.</li></ul></div>
+                        <div class="rule-box border-purple-500 mb-6"><p class="font-semibold text-white">Regla Práctica:</p><p class="text-slate-400">"Si una clase hace más de una cosa, divídela."</p></div>
+                        <button class="show-example-btn bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded transition-colors">Mostrar Ejemplo</button>
+                        <div class="example-content hidden mt-4 pt-6 border-t border-slate-700/50">
+                            <h4 class="font-semibold text-white mb-4">Ejemplo de Código (Conceptual)</h4>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-red-900/20 p-4 rounded-lg border border-red-500/30"><h5 class="font-semibold text-red-400 mb-2">Cómo no cumplirlo</h5><p class="text-slate-400 text-sm">Una clase `GestorDeReportes` que contiene métodos para generar informes de ventas (lógica de negocio), conectarse a la base de datos (acceso a datos), enviar emails con los informes (comunicación externa) y formatear fechas (utilidad).</p></div>
+                                <div class="bg-green-900/20 p-4 rounded-lg border border-green-500/30"><h5 class="font-semibold text-green-400 mb-2">Cómo cumplirlo</h5><p class="text-slate-400 text-sm">Se tienen clases separadas: `ReporteVentasService` (lógica), `EmailSender` (envío), `ReporteRepository` (acceso a datos) y `DateFormatter` (utilidad). `ReporteVentasService` utiliza las otras para cumplir su única responsabilidad.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Principio: Desacoplamiento -->
+                <div class="section-card">
+                    <div class="accordion-trigger flex justify-between items-center cursor-pointer p-6">
+                        <h3 class="text-2xl font-bold text-purple-400">Desacoplamiento</h3>
+                        <svg class="arrow w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content px-6 pb-6">
+                        <p class="mb-6 text-slate-400">Se debe minimizar el número de dependencias entre módulos.</p>
+                        <p class="mb-6 text-slate-400"><strong class="text-white">Relación Principal:</strong> Se alinea con <strong>Bajo Acoplamiento (GRASP)</strong> y es el objetivo de <strong>DIP</strong> e <strong>ISP</strong> de SOLID.</p>
+                        <div class="grid md:grid-cols-2 gap-8 mb-6">
+                            <div><h4 class="font-semibold text-white mb-3">Qué hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-green-400 mr-2">✓</span>Depender de interfaces o abstracciones.</li><li><span class="text-green-400 mr-2">✓</span>Utilizar inyección de dependencias.</li><li><span class="text-green-400 mr-2">✓</span>Comunicarse entre módulos a través de eventos.</li></ul></div>
+                            <div><h4 class="font-semibold text-white mb-3">Qué no hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-red-400 mr-2">✗</span>Instanciar dependencias concretas directamente.</li><li><span class="text-red-400 mr-2">✗</span>Que los módulos se llamen entre sí de forma cruzada.</li><li><span class="text-red-400 mr-2">✗</span>Que un cambio en una clase obligue a corregir otras 10.</li></ul></div>
+                        </div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Preguntas que debo hacerme:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li>¿Puedo reemplazar este componente sin modificar las clases que lo usan?</li><li>¿Puedo probar esta clase de forma aislada?</li></ul></div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Características del software:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li><strong>Flexibilidad:</strong> Permite cambiar o reemplazar partes con un impacto mínimo.</li><li><strong>Testeabilidad:</strong> Los componentes se pueden probar de forma aislada.</li><li><strong>Paralelización del trabajo:</strong> Equipos distintos pueden trabajar sin interferir entre sí.</li></ul></div>
+                        <div class="rule-box border-purple-500 mb-6"><p class="font-semibold text-white">Regla Práctica:</p><p class="text-slate-400">"Depende de abstracciones, no de concreciones."</p></div>
+                        <button class="show-example-btn bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded transition-colors">Mostrar Ejemplo</button>
+                        <div class="example-content hidden mt-4 pt-6 border-t border-slate-700/50">
+                            <h4 class="font-semibold text-white mb-4">Ejemplo de Código (Conceptual)</h4>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-red-900/20 p-4 rounded-lg border border-red-500/30"><h5 class="font-semibold text-red-400 mb-2">Cómo no cumplirlo</h5><p class="text-slate-400 text-sm">Una clase `OrderProcessor` que, dentro de su método, crea directamente una instancia concreta de `new PayPalPaymentGateway()` y `new EmailNotificationService()`. Está fuertemente acoplado a estas implementaciones.</p></div>
+                                <div class="bg-green-900/20 p-4 rounded-lg border border-green-500/30"><h5 class="font-semibold text-green-400 mb-2">Cómo cumplirlo</h5><p class="text-slate-400 text-sm">La clase `OrderProcessor` recibe una `IPaymentGateway` y una `INotificationService` como dependencias en su constructor. Las implementaciones concretas se inyectan desde fuera, permitiendo cambiar de proveedor sin modificar `OrderProcessor`.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Principio: Granularidad -->
+                <div class="section-card">
+                    <div class="accordion-trigger flex justify-between items-center cursor-pointer p-6">
+                        <h3 class="text-2xl font-bold text-purple-400">Granularidad</h3>
+                        <svg class="arrow w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content px-6 pb-6">
+                        <p class="mb-6 text-slate-400">Los módulos deben ser pequeños en todas sus dimensiones: pocas líneas de código, pocos atributos y pocos métodos.</p>
+                        <p class="mb-6 text-slate-400"><strong class="text-white">Relación Principal:</strong> Apoya a <strong>SRP</strong>, <strong>Alta Cohesión</strong> e <strong>ISP</strong>.</p>
+                        <div class="grid md:grid-cols-2 gap-8 mb-6">
+                            <div><h4 class="font-semibold text-white mb-3">Qué hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-green-400 mr-2">✓</span>Crear clases y métodos pequeños y enfocados.</li><li><span class="text-green-400 mr-2">✓</span>Dividir interfaces grandes en varias más pequeñas.</li><li><span class="text-green-400 mr-2">✓</span>Limitar el número de parámetros en los métodos.</li></ul></div>
+                            <div><h4 class="font-semibold text-white mb-3">Qué no hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-red-400 mr-2">✗</span>Crear "clases dios" (God Classes).</li><li><span class="text-red-400 mr-2">✗</span>Definir métodos con una larga lista de parámetros.</li><li><span class="text-red-400 mr-2">✗</span>Forzar a una clase a implementar métodos que no necesita.</li></ul></div>
+                        </div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Preguntas que debo hacerme:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li>¿Este método hace más de una cosa?</li><li>¿Esta clase tiene demasiadas dependencias o responsabilidades?</li><li>¿Estoy forzando a los clientes a depender de cosas que no usan?</li></ul></div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Características del software:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li><strong>Comprensibilidad:</strong> Es más fácil entender un componente pequeño.</li><li><strong>Reutilización:</strong> Los componentes pequeños son perfectos para ser reutilizados.</li><li><strong>Testeabilidad:</strong> Es mucho más sencillo escribir pruebas para una unidad pequeña.</li></ul></div>
+                        <div class="rule-box border-purple-500 mb-6"><p class="font-semibold text-white">Regla Práctica:</p><p class="text-slate-400">"Las funciones deben hacer una cosa y hacerla bien; las clases, una responsabilidad."</p></div>
+                        <button class="show-example-btn bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded transition-colors">Mostrar Ejemplo</button>
+                        <div class="example-content hidden mt-4 pt-6 border-t border-slate-700/50">
+                            <h4 class="font-semibold text-white mb-4">Ejemplo de Código (Conceptual)</h4>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-red-900/20 p-4 rounded-lg border border-red-500/30"><h5 class="font-semibold text-red-400 mb-2">Cómo no cumplirlo</h5><p class="text-slate-400 text-sm">Un método `procesarPedidoCompleto` con 200 líneas de código que maneja la validación del usuario, el cálculo del precio, la persistencia en la base de datos, el envío de notificaciones y la actualización del inventario.</p></div>
+                                <div class="bg-green-900/20 p-4 rounded-lg border border-green-500/30"><h5 class="font-semibold text-green-400 mb-2">Cómo cumplirlo</h5><p class="text-slate-400 text-sm">El método `procesarPedido` es mucho más pequeño y delega las tareas a métodos o clases más pequeños y específicos: `validarPedido()`, `calcularPrecio()`, `guardarPedidoEnBD()`, `enviarNotificacion()`, `actualizarInventario()`.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Principio: Jerarquía -->
+                <div class="section-card">
+                    <div class="accordion-trigger flex justify-between items-center cursor-pointer p-6">
+                        <h3 class="text-2xl font-bold text-purple-400">Jerarquía</h3>
+                        <svg class="arrow w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content px-6 pb-6">
+                        <p class="mb-6 text-slate-400">La estructura del software debe ser jerárquica, evitando las dependencias circulares entre módulos.</p>
+                        <p class="mb-6 text-slate-400"><strong class="text-white">Relación Principal:</strong> Se alinea con el <strong>Principio de Inversión de Dependencias (DIP)</strong>.</p>
+                        <div class="grid md:grid-cols-2 gap-8 mb-6">
+                            <div><h4 class="font-semibold text-white mb-3">Qué hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-green-400 mr-2">✓</span>Organizar dependencias para que fluyan en una sola dirección.</li><li><span class="text-green-400 mr-2">✓</span>Utilizar DIP para romper ciclos.</li></ul></div>
+                            <div><h4 class="font-semibold text-white mb-3">Qué no hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-red-400 mr-2">✗</span>Permitir dependencias circulares (A -> B y B -> A).</li><li><span class="text-red-400 mr-2">✗</span>Que una capa de bajo nivel dependa de una de alto nivel.</li></ul></div>
+                        </div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Preguntas que debo hacerme:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li>Si dibujo un grafo de las dependencias, ¿hay ciclos?</li><li>¿Las dependencias fluyen de lo abstracto a lo concreto o viceversa?</li></ul></div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Características del software:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li><strong>Comprensible:</strong> La estructura del proyecto es clara.</li><li><strong>Mantenible:</strong> Evita el "efecto dominó" donde un cambio rompe todo.</li></ul></div>
+                        <div class="rule-box border-purple-500 mb-6"><p class="font-semibold text-white">Regla Práctica:</p><p class="text-slate-400">"Las flechas de dependencia siempre deben apuntar hacia las abstracciones o capas de mayor nivel."</p></div>
+                        <button class="show-example-btn bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded transition-colors">Mostrar Ejemplo</button>
+                        <div class="example-content hidden mt-4 pt-6 border-t border-slate-700/50">
+                            <h4 class="font-semibold text-white mb-4">Ejemplo de Código (Conceptual)</h4>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-red-900/20 p-4 rounded-lg border border-red-500/30"><h5 class="font-semibold text-red-400 mb-2">Cómo no cumplirlo</h5><p class="text-slate-400 text-sm">Un proyecto donde la capa de "presentación" depende de la de "dominio", la de "dominio" de la de "infraestructura", pero la de "infraestructura" también depende de la de "dominio" (un ciclo).</p></div>
+                                <div class="bg-green-900/20 p-4 rounded-lg border border-green-500/30"><h5 class="font-semibold text-green-400 mb-2">Cómo cumplirlo</h5><p class="text-slate-400 text-sm">El proyecto sigue una arquitectura de capas (cebolla o hexagonal). Las dependencias fluyen hacia el centro (dominio). La capa de infraestructura depende de puertos (interfaces) definidos en el dominio, no al revés.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Principio: Dominio/Negocio y Tecnología -->
+                <div class="section-card">
+                    <div class="accordion-trigger flex justify-between items-center cursor-pointer p-6">
+                        <h3 class="text-2xl font-bold text-purple-400">Dominio/Negocio y Tecnología</h3>
+                        <svg class="arrow w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content px-6 pb-6">
+                        <p class="mb-6 text-slate-400">Es fundamental separar las partes del software que representan la lógica del negocio de las que se encargan de los aspectos tecnológicos.</p>
+                        <p class="mb-6 text-slate-400"><strong class="text-white">Relación Principal:</strong> Base de arquitecturas como la <strong>Hexagonal</strong> o <strong>Limpia (Clean Architecture)</strong>.</p>
+                        <div class="grid md:grid-cols-2 gap-8 mb-6">
+                            <div><h4 class="font-semibold text-white mb-3">Qué hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-green-400 mr-2">✓</span>Crear un núcleo de negocio sin dependencias de frameworks.</li><li><span class="text-green-400 mr-2">✓</span>Tratar la tecnología como un "plugin" o detalle.</li></ul></div>
+                            <div><h4 class="font-semibold text-white mb-3">Qué no hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-red-400 mr-2">✗</span>Mezclar código de un framework en la lógica de negocio.</li><li><span class="text-red-400 mr-2">✗</span>Que el modelo de dominio dependa de la estructura de la BD.</li></ul></div>
+                        </div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Preguntas que debo hacerme:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li>Si cambio de framework, ¿tengo que reescribir mi lógica de negocio?</li><li>¿Puedo probar mis reglas de negocio sin una base de datos?</li></ul></div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Características del software:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li><strong>Longevo:</strong> La lógica de negocio sobrevive a los cambios tecnológicos.</li><li><strong>Adaptable:</strong> Es fácil cambiar de proveedor de BD, framework, etc.</li><li><strong>Altamente testeable:</strong> El núcleo se puede probar sin dependencias externas.</li></ul></div>
+                        <div class="rule-box border-purple-500 mb-6"><p class="font-semibold text-white">Regla Práctica:</p><p class="text-slate-400">"Tu lógica de negocio debe ser agnóstica a la tecnología que la soporta."</p></div>
+                        <button class="show-example-btn bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded transition-colors">Mostrar Ejemplo</button>
+                        <div class="example-content hidden mt-4 pt-6 border-t border-slate-700/50">
+                            <h4 class="font-semibold text-white mb-4">Ejemplo de Código (Conceptual)</h4>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-red-900/20 p-4 rounded-lg border border-red-500/30"><h5 class="font-semibold text-red-400 mb-2">Cómo no cumplirlo</h5><p class="text-slate-400 text-sm">Una entidad `Producto` en el dominio que tiene anotaciones específicas de un framework ORM (`@Entity`, `@Table`) mezcladas con la lógica de negocio.</p></div>
+                                <div class="bg-green-900/20 p-4 rounded-lg border border-green-500/30"><h5 class="font-semibold text-green-400 mb-2">Cómo cumplirlo</h5><p class="text-slate-400 text-sm">La entidad `Producto` es una clase POJO sin anotaciones. Existe una interfaz `IProductoRepository` en el dominio, y su implementación `JpaProductoRepository` (que usa anotaciones) reside en la capa de infraestructura.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+        <!-- 3. Extensibilidad -->
+        <section id="extensibilidad" class="pt-20 -mt-20">
+            <h2 class="text-3xl md:text-4xl font-bold text-white border-l-4 border-teal-500 pl-4 mb-10 flex items-center gap-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-teal-400"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>
+                3. Extensibilidad
+            </h2>
+            <p class="text-lg text-slate-400 mb-12">Facilitar la adición de nuevo código sin modificar el existente. Un diseño extensible permite que el software evolucione de manera controlada y segura.</p>
+            
+            <div class="space-y-4">
+                <!-- Principio: Generalización -->
+                <div class="section-card">
+                    <div class="accordion-trigger flex justify-between items-center cursor-pointer p-6">
+                        <h3 class="text-2xl font-bold text-teal-400">Generalización</h3>
+                        <svg class="arrow w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content px-6 pb-6">
+                        <p class="mb-6 text-slate-400">Los módulos deben ser responsables de las características más generales de un problema.</p>
+                        <p class="mb-6 text-slate-400"><strong class="text-white">Relación Principal:</strong> Es la definición del <strong>Principio Abierto/Cerrado (OCP)</strong> de SOLID.</p>
+                        <div class="grid md:grid-cols-2 gap-8 mb-6">
+                            <div><h4 class="font-semibold text-white mb-3">Qué hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-green-400 mr-2">✓</span>Identificar comportamiento común y colocarlo en una clase base.</li><li><span class="text-green-400 mr-2">✓</span>Implementar variaciones en clases derivadas.</li><li><span class="text-green-400 mr-2">✓</span>Usar Polimorfismo (GRASP).</li></ul></div>
+                            <div><h4 class="font-semibold text-white mb-3">Qué no hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-red-400 mr-2">✗</span>Crear jerarquías de herencia muy profundas.</li><li><span class="text-red-400 mr-2">✗</span>Poner lógica específica de una subclase en la clase base.</li></ul></div>
+                        </div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Preguntas que debo hacerme:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li>¿Cuál es el concepto general aquí y cuáles son las variaciones específicas?</li><li>¿Estoy usando herencia para reutilizar código o para representar una relación "es un/a"?</li></ul></div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Características del software:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li><strong>Reutilización de código:</strong> El comportamiento general se escribe una sola vez.</li><li><strong>Claridad conceptual:</strong> El código refleja la estructura del dominio del problema.</li><li><strong>Extensible:</strong> Es fácil añadir nuevas especializaciones sin tocar el código general.</li></ul></div>
+                        <div class="rule-box border-teal-500 mb-6"><p class="font-semibold text-white">Regla Práctica:</p><p class="text-slate-400">"Identifica el patrón común; encapsula la variación."</p></div>
+                        <button class="show-example-btn bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded transition-colors">Mostrar Ejemplo</button>
+                        <div class="example-content hidden mt-4 pt-6 border-t border-slate-700/50">
+                            <h4 class="font-semibold text-white mb-4">Ejemplo de Código (Conceptual)</h4>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-red-900/20 p-4 rounded-lg border border-red-500/30"><h5 class="font-semibold text-red-400 mb-2">Cómo no cumplirlo</h5><p class="text-slate-400 text-sm">Un conjunto de clases `Perro`, `Gato`, `Pájaro`, cada una con su propio método `dormir()`, `comer()`, `hacerSonido()`, replicando mucha lógica idéntica o muy similar en cada una, sin una clase base `Animal`.</p></div>
+                                <div class="bg-green-900/20 p-4 rounded-lg border border-green-500/30"><h5 class="font-semibold text-green-400 mb-2">Cómo cumplirlo</h5><p class="text-slate-400 text-sm">Existe una clase abstracta `Animal` con métodos concretos `dormir()` y `comer()` que encapsulan la lógica común. Luego, `Perro`, `Gato` y `Pájaro` extienden `Animal` y solo implementan su comportamiento específico para `hacerSonido()`.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Principio: Especialización -->
+                <div class="section-card">
+                    <div class="accordion-trigger flex justify-between items-center cursor-pointer p-6">
+                        <h3 class="text-2xl font-bold text-teal-400">Especialización</h3>
+                        <svg class="arrow w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content px-6 pb-6">
+                        <p class="mb-6 text-slate-400">Cada módulo derivado de uno general debe representar una única alternativa o caso de uso específico.</p>
+                        <p class="mb-6 text-slate-400"><strong class="text-white">Relación Principal:</strong> Mecanismo para implementar <strong>OCP</strong> y <strong>LSP</strong>, y se relaciona con <strong>Polimorfismo (GRASP)</strong>.</p>
+                        <div class="grid md:grid-cols-2 gap-8 mb-6">
+                            <div><h4 class="font-semibold text-white mb-3">Qué hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-green-400 mr-2">✓</span>Crear subclases que implementen comportamientos específicos.</li><li><span class="text-green-400 mr-2">✓</span>Sobrescribir métodos abstractos o virtuales.</li><li><span class="text-green-400 mr-2">✓</span>Añadir funcionalidades específicas de la especialización.</li></ul></div>
+                            <div><h4 class="font-semibold text-white mb-3">Qué no hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-red-400 mr-2">✗</span>Añadir lógica genérica en la especialización.</li><li><span class="text-red-400 mr-2">✗</span>Romper el contrato de la clase base.</li><li><span class="text-red-400 mr-2">✗</span>Modificar la clase base para acomodar nuevas especializaciones.</li></ul></div>
+                        </div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Preguntas que debo hacerme:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li>¿Esta especialización representa una única variante del concepto general?</li><li>¿Puedo describir el propósito de esta especialización de forma concisa?</li></ul></div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Características del software:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li><strong>Modularidad mejorada:</strong> Cada especialización es un módulo independiente.</li><li><strong>Reutilización del diseño:</strong> Se reutilizan las abstracciones generales.</li><li><strong>Fácil adición de nuevas variantes:</strong> Añadir especializaciones es sencillo.</li><li><strong>Código claro y fácil de entender:</strong> Cada parte tiene un propósito claro.</li></ul></div>
+                        <div class="rule-box border-teal-500 mb-6"><p class="font-semibold text-white">Regla Práctica:</p><p class="text-slate-400">"Cada derivación debe ser una única variación específica, sin sorpresas."</p></div>
+                        <button class="show-example-btn bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded transition-colors">Mostrar Ejemplo</button>
+                        <div class="example-content hidden mt-4 pt-6 border-t border-slate-700/50">
+                            <h4 class="font-semibold text-white mb-4">Ejemplo de Código (Conceptual)</h4>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-red-900/20 p-4 rounded-lg border border-red-500/30"><h5 class="font-semibold text-red-400 mb-2">Cómo no cumplirlo</h5><p class="text-slate-400 text-sm">Una clase `Cuadrado` que hereda de `Rectangulo`. Si se llama a `cuadrado.setAncho(5)`, internamente también debe llamar a `setAlto(5)`, rompiendo el comportamiento esperado de un `Rectangulo` (viola LSP).</p></div>
+                                <div class="bg-green-900/20 p-4 rounded-lg border border-green-500/30"><h5 class="font-semibold text-green-400 mb-2">Cómo cumplirlo</h5><p class="text-slate-400 text-sm">Una clase abstracta `FormaGeometrica`. Las subclases `Circulo`, `Rectangulo` y `Triangulo` heredan de ella y cada una implementa `calcularArea()` de manera específica para su forma, introduciendo solo las propiedades que necesita.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Principio: Sustitución -->
+                <div class="section-card">
+                    <div class="accordion-trigger flex justify-between items-center cursor-pointer p-6">
+                        <h3 class="text-2xl font-bold text-teal-400">Sustitución</h3>
+                        <svg class="arrow w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content px-6 pb-6">
+                        <p class="mb-6 text-slate-400">Los módulos deben poder ser reemplazados por otros compatibles sin que el sistema deje de funcionar correctamente.</p>
+                        <p class="mb-6 text-slate-400"><strong class="text-white">Relación Principal:</strong> Correspondencia directa y literal con el <strong>Principio de Sustitución de Liskov (LSP)</strong> de SOLID.</p>
+                        <div class="grid md:grid-cols-2 gap-8 mb-6">
+                            <div><h4 class="font-semibold text-white mb-3">Qué hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-green-400 mr-2">✓</span>Asegurar que las clases derivadas puedan ser usadas donde se espere la clase base.</li><li><span class="text-green-400 mr-2">✓</span>Las subclases deben extender la funcionalidad, no restringirla.</li></ul></div>
+                            <div><h4 class="font-semibold text-white mb-3">Qué no hacer:</h4><ul class="space-y-2 list-inside text-slate-400"><li><span class="text-red-400 mr-2">✗</span>Lanzar una `NotImplementedException` en un método heredado.</li><li><span class="text-red-400 mr-2">✗</span>Cambiar el comportamiento esperado de un método heredado.</li></ul></div>
+                        </div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Preguntas que debo hacerme:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li>¿Puedo poner una instancia de mi subclase en una lista de la clase base y que todo siga funcionando?</li><li>¿La subclase cumple con el "contrato" de la clase padre?</li></ul></div>
+                        <div class="space-y-4 mb-6"><h4 class="font-semibold text-white">Características del software:</h4><ul class="space-y-1 text-slate-400 list-disc list-inside"><li><strong>Confiable:</strong> El polimorfismo funciona como se espera, sin necesidad de verificar tipos.</li><li><strong>Flexible:</strong> Permite construir jerarquías de clases robustas y coherentes.</li></ul></div>
+                        <div class="rule-box border-teal-500 mb-6"><p class="font-semibold text-white">Regla Práctica:</p><p class="text-slate-400">"Si puedes usar 'es un tipo de' para describir la relación, entonces la sustitución debería funcionar."</p></div>
+                        <button class="show-example-btn bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded transition-colors">Mostrar Ejemplo</button>
+                        <div class="example-content hidden mt-4 pt-6 border-t border-slate-700/50">
+                            <h4 class="font-semibold text-white mb-4">Ejemplo de Código (Conceptual)</h4>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-red-900/20 p-4 rounded-lg border border-red-500/30"><h5 class="font-semibold text-red-400 mb-2">Cómo no cumplirlo</h5><p class="text-slate-400 text-sm">Una clase base `Pato` con un método `volar()`. Una subclase `PatoDeGoma` hereda de `Pato`, pero su método `volar()` lanza una excepción o no hace nada, rompiendo la expectativa de que cualquier `Pato` puede volar.</p></div>
+                                <div class="bg-green-900/20 p-4 rounded-lg border border-green-500/30"><h5 class="font-semibold text-green-400 mb-2">Cómo cumplirlo</h5><p class="text-slate-400 text-sm">La clase `AnimalQueVuela` tiene un método `volar()`. `Pato` hereda de `AnimalQueVuela`. `PatoDeGoma` no hereda de `AnimalQueVuela` sino de `Juguete`. Si una función necesita un animal volador, recibe un `AnimalQueVuela`.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-10 border-t border-slate-800">
+        <p class="text-slate-500">Presentación de Diseño de Software</p>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        // --- Lógica del Acordeón ---
+        const accordionTriggers = document.querySelectorAll('.accordion-trigger');
+        accordionTriggers.forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                const content = trigger.nextElementSibling;
+                const allContents = document.querySelectorAll('.accordion-content');
+                
+                // Cierra todos los demás acordeones en la misma sección
+                const parentSection = trigger.closest('section');
+                parentSection.querySelectorAll('.accordion-trigger').forEach(otherTrigger => {
+                    if (otherTrigger !== trigger) {
+                        otherTrigger.classList.remove('open');
+                        otherTrigger.nextElementSibling.style.maxHeight = null;
+                    }
+                });
+
+                // Abre o cierra el actual
+                trigger.classList.toggle('open');
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        });
+
+        // --- Lógica para Mostrar/Ocultar Ejemplos ---
+        const exampleButtons = document.querySelectorAll('.show-example-btn');
+        exampleButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation(); // Evita que el click en el botón active el acordeón
+                const exampleContent = button.nextElementSibling;
+                const isHidden = exampleContent.classList.contains('hidden');
+                
+                if (isHidden) {
+                    exampleContent.classList.remove('hidden');
+                    button.textContent = 'Ocultar Ejemplo';
+                } else {
+                    exampleContent.classList.add('hidden');
+                    button.textContent = 'Mostrar Ejemplo';
+                }
+                
+                // Recalcular el tamaño del acordeón padre si está abierto
+                const parentAccordionContent = button.closest('.accordion-content');
+                if (parentAccordionContent && parentAccordionContent.style.maxHeight) {
+                    parentAccordionContent.style.maxHeight = parentAccordionContent.scrollHeight + "px";
+                }
+            });
+        });
+
+        // --- Lógica para Animación al Hacer Scroll ---
+        const cards = document.querySelectorAll('.section-card');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, {
+            rootMargin: '0px',
+            threshold: 0.1
+        });
+
+        cards.forEach(card => {
+            observer.observe(card);
+        });
+    });
+    </script>
+</body>
+</html>
