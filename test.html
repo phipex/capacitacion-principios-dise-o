@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Principios de Diseño de Software</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease-in-out;
+        }
+        .btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgb(0 0 0 / 0.2);
+        }
+        .option.correct {
+            background-color: #dcfce7; /* green-100 */
+            border-color: #22c55e; /* green-500 */
+            color: #15803d; /* green-700 */
+        }
+        .option.incorrect {
+            background-color: #fee2e2; /* red-100 */
+            border-color: #ef4444; /* red-500 */
+            color: #b91c1c; /* red-700 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div id="quiz-container" class="card w-full max-w-2xl p-6 md:p-8">
+
+        <!-- Pantalla de Inicio -->
+        <div id="start-screen">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-4">Test de Principios de Diseño</h1>
+            <p class="text-gray-600 text-center mb-8">Pon a prueba tus conocimientos sobre los principios fundamentales del diseño de software.</p>
+            <button id="start-btn" class="w-full bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg text-lg btn hover:bg-indigo-700">
+                Comenzar Test
+            </button>
+        </div>
+
+        <!-- Pantalla del Test -->
+        <div id="quiz-screen" class="hidden">
+            <div id="progress-container" class="mb-4">
+                <p id="question-counter" class="text-sm text-gray-500 text-right"></p>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
+                </div>
+            </div>
+            <h2 id="question-text" class="text-2xl font-semibold text-gray-800 mb-6"></h2>
+            <div id="options-container" class="space-y-4">
+                <!-- Las opciones se generarán aquí -->
+            </div>
+        </div>
+
+        <!-- Pantalla de Resultados -->
+        <div id="results-screen" class="hidden text-center">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">¡Test Completado!</h2>
+            <p class="text-lg text-gray-600 mb-2">Tu puntuación final es:</p>
+            <p id="score-text" class="text-5xl font-extrabold text-indigo-600 mb-8"></p>
+            
+            <div id="summary-container" class="text-left">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Resumen de Respuestas</h3>
+                <div id="summary-list" class="space-y-4 max-h-60 overflow-y-auto pr-2">
+                    <!-- El resumen se generará aquí -->
+                </div>
+            </div>
+
+            <button id="restart-btn" class="w-full mt-8 bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg text-lg btn hover:bg-indigo-700">
+                Intentar de Nuevo
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // --- BASE DE DATOS DE PREGUNTAS ---
+        // Se ha ampliado el banco de preguntas para mayor variedad.
+        const allQuestions = [
+            // Set Original
+            {
+                question: "¿Cuál de las siguientes acciones viola directamente el principio de 'Unicidad' (DRY)?",
+                options: [
+                    { text: "Crear funciones de utilidad compartidas para operaciones comunes.", correct: false },
+                    { text: "Copiar y pegar la misma lógica de validación en el frontend y en el backend.", correct: true, rationale: "Esto crea duplicidad de código, que es exactamente lo que el principio de Unicidad (Don't Repeat Yourself) busca evitar." },
+                    { text: "Usar constantes para valores que se repiten, como cadenas de texto.", correct: false },
+                    { text: "Centralizar la lógica de negocio en clases de servicio específicas.", correct: false }
+                ]
+            },
+            {
+                question: "Según el principio de 'Minimización', ¿qué se debe hacer al desarrollar una nueva funcionalidad?",
+                options: [
+                    { text: "Agregar características adicionales que podrían ser útiles en el futuro.", correct: false },
+                    { text: "Implementar únicamente la funcionalidad descrita en los requisitos actuales.", correct: true, rationale: "Esto se alinea perfectamente con la Minimización, que aboga por construir solo lo que es necesario ahora." },
+                    { text: "Escribir una solución compleja para prever todos los casos de uso posibles.", correct: false },
+                    { text: "Priorizar la optimización del rendimiento sobre la simplicidad.", correct: false }
+                ]
+            },
+            {
+                question: "¿Cuál es una característica principal del software que aplica correctamente el principio de 'Ocultación'?",
+                options: [
+                    { text: "Todas las propiedades de una clase son públicas para facilitar el acceso.", correct: false },
+                    { text: "Se puede cambiar la implementación interna de un módulo sin afectar a quienes lo usan.", correct: true, rationale: "Este es un beneficio clave de la Ocultación. Al ocultar los detalles, puedes modificarlos libremente siempre que la interfaz pública no cambie." },
+                    { text: "La lógica de negocio reside fuera de las clases, que solo tienen getters y setters.", correct: false },
+                    { text: "El código cliente manipula directamente el estado interno de los objetos.", correct: false }
+                ]
+            },
+            {
+                question: "¿Qué indica una 'baja cohesión' en un módulo de software?",
+                options: [
+                    { text: "La clase se enfoca en una única y bien definida responsabilidad.", correct: false },
+                    { text: "Los datos y las funciones que operan sobre ellos están agrupados.", correct: false },
+                    { text: "Una clase llamada 'Utils' que contiene métodos no relacionados entre sí.", correct: true, rationale: "Las clases genéricas con métodos no relacionados son un ejemplo clásico de baja cohesión, ya que el módulo no tiene un propósito único." },
+                    { text: "El impacto de un cambio está localizado y no afecta a otras partes del sistema.", correct: false }
+                ]
+            },
+            {
+                question: "El principio de 'Desacoplamiento' se logra principalmente al...",
+                options: [
+                    { text: "Hacer que los módulos se llamen directamente entre sí para mayor eficiencia.", correct: false },
+                    { text: "Depender de implementaciones concretas en lugar de abstracciones.", correct: false },
+                    { text: "Instanciar dependencias directamente dentro de la clase que las necesita.", correct: false },
+                    { text: "Depender de interfaces o abstracciones en lugar de clases concretas.", correct: true, rationale: "Esta es la técnica fundamental para lograr el desacoplamiento, ya que permite cambiar la implementación sin afectar al cliente." }
+                ]
+            },
+            {
+                question: "De acuerdo con el principio de 'Jerarquía', ¿cuál de las siguientes situaciones se debe evitar a toda costa?",
+                options: [
+                    { text: "Una capa de UI que depende de la capa de Lógica de Negocio.", correct: false },
+                    { text: "El Módulo A depende del Módulo B, y el Módulo B depende del Módulo A.", correct: true, rationale: "Esto es una dependencia circular, que rompe la estructura jerárquica y crea un 'efecto dominó' en los cambios." },
+                    { text: "Usar el Principio de Inversión de Dependencias para romper ciclos.", correct: false },
+                    { text: "Organizar las dependencias para que fluyan en una sola dirección.", correct: false }
+                ]
+            },
+            {
+                question: "¿Cuál es el principal beneficio de separar el 'Dominio/Negocio' de la 'Tecnología'?",
+                options: [
+                    { text: "El código es más rápido porque la lógica de negocio no tiene anotaciones de framework.", correct: false },
+                    { text: "El desarrollo inicial es más rápido al mezclar todo en una sola capa.", correct: false },
+                    { text: "La lógica de negocio sobrevive a los cambios tecnológicos y es más adaptable.", correct: true, rationale: "Al ser agnóstica a la tecnología, la lógica de negocio (el valor real del software) puede perdurar aunque se cambie el framework o la base de datos." },
+                    { text: "Es más fácil para los nuevos desarrolladores entender el proyecto completo de una vez.", correct: false }
+                ]
+            },
+            {
+                question: "El uso de una clase base abstracta 'Vehiculo' y clases derivadas como 'Coche' y 'Bicicleta' es un ejemplo de...",
+                options: [
+                    { text: "Sustitución, porque se pueden intercambiar sin problemas.", correct: false },
+                    { text: "Cohesión, porque cada clase tiene una sola responsabilidad.", correct: false },
+                    { text: "Generalización y Especialización, que implementan el Principio Abierto/Cerrado.", correct: true, rationale: "Se define un concepto general ('Vehiculo') y se extiende con casos específicos ('Coche', 'Bicicleta'), permitiendo añadir nuevos tipos sin modificar el código existente." },
+                    { text: "Autoprotección, porque cada clase valida sus entradas.", correct: false }
+                ]
+            },
+            {
+                question: "¿Cuál de las siguientes acciones es una violación clara del principio de 'Sustitución' (Liskov)?",
+                options: [
+                    { text: "Una subclase que extiende la funcionalidad de su clase base añadiendo un nuevo método.", correct: false },
+                    { text: "Una subclase que lanza una excepción 'NotImplementedException' en un método heredado.", correct: true, rationale: "Esto rompe el 'contrato' de la clase base. Un cliente que espera un comportamiento funcional obtendrá un error, violando la sustitución." },
+                    { text: "Una subclase que implementa un método abstracto de su clase base.", correct: false },
+                    { text: "Usar una instancia de una subclase donde se espera una instancia de la clase base.", correct: false }
+                ]
+            },
+            {
+                question: "¿Qué práctica es fundamental para mantener la 'Uniformidad' en un proyecto de software?",
+                options: [
+                    { text: "Permitir que cada desarrollador aplique su propio estilo de código.", correct: false },
+                    { text: "Definir y automatizar guías de estilo de código usando linters y formateadores.", correct: true, rationale: "El uso de herramientas para forzar un estilo consistente en todo el proyecto es la forma más efectiva de garantizar la uniformidad." },
+                    { text: "Mezclar diferentes patrones de diseño sin una razón clara.", correct: false },
+                    { text: "Usar diferentes formas de nombrar los mismos conceptos en distintas partes del sistema.", correct: false }
+                ]
+            },
+            // --- NUEVAS PREGUNTAS ---
+            {
+                question: "¿Cuál de las siguientes es la mejor implementación del principio de 'Autoprotección' en un método que recibe un objeto?",
+                options: [
+                    { text: "Confiar en que el código cliente siempre enviará un objeto válido.", correct: false },
+                    { text: "Usar una cláusula `guard` al inicio para verificar si el objeto es nulo y lanzar una excepción.", correct: true, rationale: "La autoprotección implica validar las entradas (guard clauses) para proteger el módulo de un uso inadecuado." },
+                    { text: "Capturar cualquier excepción de forma silenciosa para que el programa no se detenga.", correct: false },
+                    { text: "Permitir que el método continúe su ejecución incluso con datos inválidos.", correct: false }
+                ]
+            },
+            {
+                question: "¿Qué es una 'God Class' (Clase Dios) y por qué viola el principio de 'Granularidad'?",
+                options: [
+                    { text: "Una clase muy eficiente que maneja todas las operaciones del sistema.", correct: false },
+                    { text: "Una clase base en una jerarquía de herencia.", correct: false },
+                    { text: "Una clase con miles de líneas y docenas de responsabilidades no relacionadas.", correct: true, rationale: "La granularidad aboga por componentes pequeños y enfocados. Una 'God Class' es lo opuesto, siendo monolítica y con baja cohesión." },
+                    { text: "Una clase que solo tiene métodos estáticos.", correct: false }
+                ]
+            },
+            {
+                question: "Un módulo que solo gestiona usuarios (crear, leer, actualizar) y no interactúa directamente con la base de datos (depende de una interfaz de repositorio) demuestra...",
+                options: [
+                    { text: "Baja cohesión y alto acoplamiento.", correct: false },
+                    { text: "Alta cohesión y alto acoplamiento.", correct: false },
+                    { text: "Baja cohesión y bajo acoplamiento.", correct: false },
+                    { text: "Alta cohesión y bajo acoplamiento.", correct: true, rationale: "Es altamente cohesivo (una sola responsabilidad: gestión de usuarios) y está desacoplado de la tecnología de persistencia (depende de una interfaz)." }
+                ]
+            },
+            {
+                question: "Si tienes una clase `Pajaro` con un método `volar()`, y creas una subclase `Pinguino` que lanza una `UnsupportedOperationException` en `volar()`, ¿qué principio se está violando?",
+                options: [
+                    { text: "Principio Abierto/Cerrado.", correct: false },
+                    { text: "Principio de Responsabilidad Única.", correct: false },
+                    { text: "Principio de Sustitución de Liskov.", correct: true, rationale: "Un `Pinguino` no puede sustituir a un `Pajaro` sin cambiar el comportamiento esperado del programa, violando LSP." },
+                    { text: "Principio de Inversión de Dependencias.", correct: false }
+                ]
+            },
+            {
+                question: "¿Cómo ayuda el Principio de Inversión de Dependencias (DIP) a mantener una buena 'Jerarquía'?",
+                options: [
+                    { text: "Asegurando que todas las clases dependan de una clase 'Manager' global.", correct: false },
+                    { text: "Permitiendo que las capas de bajo nivel (datos) dependan de las de alto nivel (UI).", correct: false },
+                    { text: "Haciendo que tanto las capas de alto como las de bajo nivel dependan de abstracciones, rompiendo ciclos.", correct: true, rationale: "DIP rompe las dependencias directas y establece un flujo claro hacia las abstracciones, evitando ciclos y manteniendo la jerarquía." },
+                    { text: "Forzando el uso de herencia en todo el sistema.", correct: false }
+                ]
+            },
+            {
+                question: "Un desarrollador añade un complejo sistema de caché porque 'podría ser necesario si la app crece mucho'. ¿Qué principio está ignorando?",
+                options: [
+                    { text: "DRY (Don't Repeat Yourself).", correct: false },
+                    { text: "KISS (Keep It Simple, Stupid).", correct: false },
+                    { text: "YAGNI (You Ain't Gonna Need It).", correct: true, rationale: "YAGNI dicta no implementar funcionalidad por especulación futura, sino solo por necesidad presente." },
+                    { text: "SRP (Single Responsibility Principle).", correct: false }
+                ]
+            },
+            {
+                question: "¿Por qué es una mala práctica que tu clase de entidad de negocio `Pedido` contenga anotaciones de un framework específico como `@Entity` de JPA?",
+                options: [
+                    { text: "Porque hace que la clase sea más difícil de leer.", correct: false },
+                    { text: "Porque acopla tu lógica de negocio (el núcleo) a un detalle de implementación (la tecnología de persistencia).", correct: true, rationale: "El núcleo del negocio debe ser agnóstico a la tecnología para ser longevo y adaptable." },
+                    { text: "Porque las anotaciones hacen que el programa sea más lento.", correct: false },
+                    { text: "Porque es mejor definir el esquema directamente en la base de datos.", correct: false }
+                ]
+            },
+            {
+                question: "Una clase `CalculadoraDeImpuestos` tiene un método público `calcular(ingresos)` y varios métodos privados como `obtenerTasaImpositiva()` y `aplicarDeducciones()`. Esto es un buen ejemplo de:",
+                options: [
+                    { text: "Herencia.", correct: false },
+                    { text: "Ocultación de información (Encapsulación).", correct: true, rationale: "Se expone una interfaz simple (`calcular`) y se oculta la complejidad interna (`private methods`), que es la esencia de la ocultación." },
+                    { text: "Bajo acoplamiento.", correct: false },
+                    { text: "Polimorfismo.", correct: false }
+                ]
+            },
+            {
+                question: "Tienes una clase general `ProcesadorDePago` y especializaciones como `ProcesadorTarjetaCredito` y `ProcesadorPayPal`. ¿Cuál es el objetivo principal de esta estructura?",
+                options: [
+                    { text: "Asegurar que solo se pueda pagar con tarjeta de crédito.", correct: false },
+                    { text: "Permitir añadir nuevos métodos de pago (ej. `ProcesadorCripto`) sin modificar el código que usa `ProcesadorDePago`.", correct: true, rationale: "Esta estructura implementa el Principio Abierto/Cerrado, permitiendo la extensión (nuevos procesadores) sin modificar el código existente." },
+                    { text: "Hacer que el código sea más difícil de probar.", correct: false },
+                    { text: "Forzar a que todos los procesadores compartan exactamente la misma implementación.", correct: false }
+                ]
+            }
+        ];
+
+        // --- ELEMENTOS DEL DOM ---
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+
+        const startBtn = document.getElementById('start-btn');
+        const restartBtn = document.getElementById('restart-btn');
+
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const questionCounter = document.getElementById('question-counter');
+        const progressBar = document.getElementById('progress-bar');
+        
+        const scoreText = document.getElementById('score-text');
+        const summaryList = document.getElementById('summary-list');
+
+        // --- ESTADO DEL TEST ---
+        let shuffledQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let incorrectAnswers = [];
+        const questionsPerQuiz = 10; // Definir cuántas preguntas mostrar por test
+
+        // --- FUNCIONES ---
+
+        /**
+         * Baraja un array usando el algoritmo Fisher-Yates.
+         * @param {Array} array El array a barajar.
+         * @returns {Array} El array barajado.
+         */
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        /**
+         * Inicia el test: baraja las preguntas y muestra la primera.
+         */
+        function startQuiz() {
+            // Reiniciar estado
+            score = 0;
+            currentQuestionIndex = 0;
+            incorrectAnswers = [];
+
+            // Barajar todo el banco de preguntas y seleccionar un subconjunto
+            let tempQuestions = shuffleArray([...allQuestions]);
+            shuffledQuestions = tempQuestions.slice(0, questionsPerQuiz);
+            
+            // Barajar las opciones de las preguntas seleccionadas
+            shuffledQuestions.forEach(q => {
+                q.options = shuffleArray([...q.options]);
+            });
+
+            // Cambiar de pantalla
+            startScreen.classList.add('hidden');
+            resultsScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+
+            showNextQuestion();
+        }
+
+        /**
+         * Muestra la pregunta actual y sus opciones.
+         */
+        function showNextQuestion() {
+            resetState();
+            if (currentQuestionIndex < shuffledQuestions.length) {
+                const question = shuffledQuestions[currentQuestionIndex];
+                questionText.textContent = question.question;
+
+                question.options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.textContent = option.text;
+                    button.classList.add('w-full', 'p-4', 'border', 'border-gray-300', 'rounded-lg', 'text-left', 'hover:bg-gray-100', 'focus:outline-none', 'focus:ring-2', 'focus:ring-indigo-500', 'option');
+                    button.addEventListener('click', () => selectAnswer(option, button));
+                    optionsContainer.appendChild(button);
+                });
+
+                updateProgress();
+            } else {
+                showResults();
+            }
+        }
+        
+        /**
+         * Limpia el contenedor de opciones para la siguiente pregunta.
+         */
+        function resetState() {
+            optionsContainer.innerHTML = '';
+        }
+
+        /**
+         * Procesa la respuesta seleccionada por el usuario.
+         * @param {object} selectedOption El objeto de la opción seleccionada.
+         * @param {HTMLElement} selectedButton El botón que fue presionado.
+         */
+        function selectAnswer(selectedOption, selectedButton) {
+            const correct = selectedOption.correct;
+            
+            // Incrementar puntuación si es correcta
+            if (correct) {
+                score++;
+            } else {
+                // Guardar la pregunta y la respuesta incorrecta para el resumen
+                incorrectAnswers.push({
+                    question: shuffledQuestions[currentQuestionIndex].question,
+                    yourAnswer: selectedOption.text,
+                    correctAnswer: shuffledQuestions[currentQuestionIndex].options.find(opt => opt.correct).text
+                });
+            }
+
+            // Deshabilitar todas las opciones y mostrar colores de feedback
+            Array.from(optionsContainer.children).forEach((button, index) => {
+                const option = shuffledQuestions[currentQuestionIndex].options[index];
+                if (option.correct) {
+                    button.classList.add('correct');
+                }
+                button.disabled = true;
+            });
+            
+            if (!correct) {
+                selectedButton.classList.add('incorrect');
+            }
+
+            // Pasar a la siguiente pregunta después de un breve retraso
+            setTimeout(() => {
+                currentQuestionIndex++;
+                showNextQuestion();
+            }, 1500);
+        }
+
+        /**
+         * Actualiza el contador de preguntas y la barra de progreso.
+         */
+        function updateProgress() {
+            const progressPercentage = ((currentQuestionIndex + 1) / shuffledQuestions.length) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+            questionCounter.textContent = `Pregunta ${currentQuestionIndex + 1} de ${shuffledQuestions.length}`;
+        }
+
+        /**
+         * Muestra la pantalla de resultados finales.
+         */
+        function showResults() {
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            
+            scoreText.textContent = `${score} / ${shuffledQuestions.length}`;
+            
+            summaryList.innerHTML = ''; // Limpiar resumen anterior
+            if(incorrectAnswers.length === 0) {
+                summaryList.innerHTML = '<p class="text-green-600 font-medium">¡Felicidades! ¡Respondiste todo correctamente!</p>';
+            } else {
+                incorrectAnswers.forEach(item => {
+                    const summaryItem = document.createElement('div');
+                    summaryItem.classList.add('p-3', 'bg-red-50', 'border', 'border-red-200', 'rounded-lg');
+                    summaryItem.innerHTML = `
+                        <p class="font-semibold text-gray-700">${item.question}</p>
+                        <p class="text-sm text-red-700 mt-1"><strong>Tu respuesta:</strong> ${item.yourAnswer}</p>
+                        <p class="text-sm text-green-700"><strong>Correcta:</strong> ${item.correctAnswer}</p>
+                    `;
+                    summaryList.appendChild(summaryItem);
+                });
+            }
+        }
+
+        // --- EVENT LISTENERS ---
+        startBtn.addEventListener('click', startQuiz);
+        restartBtn.addEventListener('click', startQuiz);
+
+    </script>
+</body>
+</html>
